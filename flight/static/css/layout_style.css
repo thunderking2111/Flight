@@ -1,3 +1,8 @@
+:root {
+    --primary-color: #344b54;
+    --white: #fff;
+}
+
 body{
     margin: 0px;
     padding: 0px;
@@ -15,8 +20,14 @@ body{
 }
 .navbar{
     padding: .7rem 1.2rem;
-    background-color: #fff;
+    background-color: var(--primary-color) !important;
     transition-duration: .2s;
+}
+.navbar .nav-link {
+    color: rgba(255,255,255,0.5) !important;
+}
+.navbar .my-account .nav-link, .navbar .active .nav-link{
+    color: #fff !important;
 }
 .nav-link:hover{
     color: #e12323!important;
@@ -171,7 +182,7 @@ body{
 }
 
 
-.second-section .section_title{
+.third-section .section_title{
     margin-top: 25px;
     margin-bottom: 45px;
 }
@@ -343,4 +354,3 @@ footer .container > div{
     background: #ccc;
     border-radius: 5px;
 }
-

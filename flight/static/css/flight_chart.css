@@ -1,0 +1,106 @@
+.flight-chart {
+    flex-grow: 1;
+    border: 1px solid #dde3ed;
+    border-radius: 6px;
+}
+
+header ul {
+    margin: 0;
+    padding: 0;
+    border-bottom-color: var(--primary-color) !important;
+}
+header .tab-content {
+    margin: 0;
+    background-color: var(--primary-color) !important;
+}
+header.flight-chart-header a {
+    align-items: center;
+    color: var(--primary-color) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    display: flex;
+    height: 64px;
+    line-height: 1;
+    outline: 0 !important;
+    padding: 16px 22px;
+    font-size: 22px;
+}
+header.flight-chart-header a:hover {
+    border: 0 !important;
+    color: var(--primary-color) !important;
+}
+header.flight-chart-header a.active {
+    background-color: var(--primary-color) !important;
+    color: var(--white) !important;
+}
+header.flight-chart-header a.active:hover {
+    color: var(--white) !important;
+}
+header.flight-chart-header a::before {
+    content: "";
+    display: inline-block;
+    height: 28px;
+    width: 28px;
+    margin-right: 12px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.tab-content .tab-pane {
+    padding: 20px 26px 26px;
+}
+.tab-content .tab-pane ul {
+    margin-bottom: 16px;
+    font-size: 16px;
+    color: #fff;
+}
+.tab-content .tab-pane ul li {
+    margin-right: 16px;
+    cursor: pointer;
+}
+
+.flight-chart-search .form-control {
+    padding-left: 2.375rem;
+}
+.flight-chart-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.flight-chart-table {
+    border-bottom: 2px solid #dee2e6;
+    margin: 0 !important;
+}
+
+.flight-chart-footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #fff;
+    justify-content: space-between;
+    padding: 20px 26px;
+}
+.flight-chart-footer a.btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+a#arrivals-tab::before {
+    background-image: url(/static/img/arrivals.svg);
+}
+a#arrivals-tab.active::before {
+    background-image: url(/static/img/arrivals-white.svg) !important;
+}
+a#departures-tab::before {
+    background-image: url(/static/img/departures.svg);
+}
+a#departures-tab.active::before {
+    background-image: url(/static/img/departures-white.svg) !important;
+}

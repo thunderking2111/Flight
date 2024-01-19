@@ -5,6 +5,7 @@
 {% block head %}
     <title>Home | Flight</title>
     <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/flight_chart.css' %}">
 {% endblock head %}
 
 {% block body %}
@@ -82,7 +83,10 @@
             </div>
         </div>
     </section>
-    <section class="section second-section">
+
+    {% include 'flight/flight_chart.html' %}
+
+    <section class="section third-section">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">

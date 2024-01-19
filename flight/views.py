@@ -34,6 +34,8 @@ except:
 def index(request):
     min_date = f"{datetime.now().date().year}-{datetime.now().date().month}-{datetime.now().date().day}"
     max_date = f"{datetime.now().date().year if (datetime.now().date().month+3)<=12 else datetime.now().date().year+1}-{(datetime.now().date().month + 3) if (datetime.now().date().month+3)<=12 else (datetime.now().date().month+3-12)}-{datetime.now().date().day}"
+    flight_data = list(Flight.objects.all().values('airline','plane','origin_id','depart_time','arrival_time')[:10])
+    print(flight_data)
     if request.method == 'POST':
         origin = request.POST.get('Origin')
         destination = request.POST.get('Destination')
@@ -46,7 +48,8 @@ def index(request):
             'destination': destination,
             'depart_date': depart_date,
             'seat': seat.lower(),
-            'trip_type': trip_type
+            'trip_type': trip_type,
+            'flight_data': flight_data
         })
         elif(trip_type == '2'):
             return_date = request.POST.get('ReturnDate')
@@ -58,12 +61,14 @@ def index(request):
             'depart_date': depart_date,
             'seat': seat.lower(),
             'trip_type': trip_type,
-            'return_date': return_date
+            'return_date': return_date,
+            'flight_data': flight_data
         })
     else:
         return render(request, 'flight/index.html', {
             'min_date': min_date,
-            'max_date': max_date
+            'max_date': max_date,
+            'flight_data': flight_data
         })
 
 def login_view(request):
@@ -74,7 +79,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
-            
+
         else:
             return render(request, "flight/login.html", {
                 "message": "Invalid username and/or password."
@@ -164,7 +169,7 @@ def flight(request):
             except:
                 max_price2 = 0  ##
                 min_price2 = 0  ##
-                
+
     elif seat == 'business':
         flights = Flight.objects.filter(depart_day=flightday,origin=origin,destination=destination).exclude(business_fare=0).order_by('business_fare')
         try:
@@ -191,7 +196,7 @@ def flight(request):
         except:
             max_price = 0
             min_price = 0
-            
+
         if trip_type == '2':    ##
             flights2 = Flight.objects.filter(depart_day=flightday2,origin=origin2,destination=destination2).exclude(first_fare=0).order_by('first_fare')
             try:
@@ -305,7 +310,7 @@ def book(request):
                 gender = request.POST[f'passenger{i}Gender']
                 passengers.append(Passenger.objects.create(first_name=fname,last_name=lname,gender=gender.lower()))
             coupon = request.POST.get('coupon')
-            
+
             try:
                 ticket1 = createticket(request.user,passengers,passengerscount,flight1,flight_1date,flight_1class,coupon,countrycode,email,mobile)
                 if f2:
@@ -328,7 +333,7 @@ def book(request):
                         fare = flight1.first_fare*int(passengerscount)
             except Exception as e:
                 return HttpResponse(e)
-            
+
 
             if f2:    ##
                 return render(request, "flight/payment.html", { ##

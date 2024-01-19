@@ -1,0 +1,91 @@
+<section class="section second-section">
+    <div class="container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="section_title text-center mb_70">
+                        <h2>Today's Flight Information</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <section class="flight-chart">
+                    <header class="flight-chart-header">
+                        <ul class="nav nav-tabs" role="tablist" id="myTab" data-tabs id="flight-info-filters">
+                            <li id="arrivals-item" class="nav-item">
+                                <a href="#arrivals-content" id="arrivals-tab" class="nav-link active" role="tab" data-toggle="tab" aria-controls="arrivals-content" aria-selected="true">Arrivals</a>
+                            </li>
+                            <li id="departures-item" class="nav-item">
+                                <a href="#departures-content" id="departures-tab" class="nav-link" role="tab" data-toggle="tab" aria-controls="departures-content" aria-selected="false">Departures</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane show active" id="arrivals-content" role="tabpanel" aria-labelledby="arrivals-tab">
+                                <ul>
+                                    <li class="custom-control custom-radio custom-control-inline">
+                                        <input id="domestic-arrivals" name="arrivals" type="radio" value="Domestic" checked class="custom-control-input"/>
+                                        <label for="domestic-arrivals" class="custom-control-label">Domestic arrivals</label>
+                                    </li>
+                                    <li class="custom-control custom-radio custom-control-inline">
+                                        <input id="international-arrivals" name="arrivals" type="radio" value="International" class="custom-control-input"/>
+                                        <label for="international-arrivals" class="custom-control-label">International arrivals</label>
+                                    </li>
+                                </ul>
+                                <div class="form-group flight-chart-search">
+                                    <span class="fa fa-search form-control-feedback"></span>
+                                    <input type="text" class="form-control" placeholder="Flight #, Airline or Location">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="departures-content" role="tabpanel" aria-labelledby="departures-tab">
+                                <ul>
+                                    <li class="custom-control custom-radio custom-control-inline">
+                                        <input id="domestic-departures" name="departures" type="radio" value="Domestic" checked class="custom-control-input"/>
+                                        <label for="domestic-departures" class="custom-control-label">Domestic departures</label>
+                                    </li>
+                                    <li class="custom-control custom-radio custom-control-inline">
+                                        <input id="international-departures" name="departures" type="radio" value="International" class="custom-control-input"/>
+                                        <label for="international-departures" class="custom-control-label">International departures</label>
+                                    </li>
+                                </ul>
+                                <div class="form-group flight-chart-search">
+                                    <span class="fa fa-search form-control-feedback"></span>
+                                    <input type="text" class="form-control" placeholder="Search">
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <table class="table table-hover table-center flight-chart-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Airline</th>
+                                <th scope="col">Flight No.</th>
+                                <th scope="col">Arriving From</th>
+                                <th scope="col">Depart Time</th>
+                                <th scope="col">Arrival Time</th>
+                                <th scope="col">Booking</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in flight_data %}
+                                <tr>
+                                    <td class="col--airline">{{ row.airline }}</td>
+                                    <td class="col--flight-no">{{ row.plane }}</td>
+                                    <td class="col--arriving-from">{{ row.origin_id }}</td>
+                                    <td class="col--scheduled">{{ row.depart_time }}</td>
+                                    <td class="col--est-act">{{ row.arrival_time }}</td>
+                                    <td>book</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <footer class="flight-chart-footer">
+                        <a href="/travellers/flights/arrivals-and-departures/" class="btn" >View all flight information</a>
+                        <span>Last updated <span class="last-updated"> - - : - -</span>.
+                            <a href="/terms-and-conditions/"  target=_blank >Disclaimer</a>
+                        </span>
+                    </footer>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
