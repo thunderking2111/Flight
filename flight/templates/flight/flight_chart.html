@@ -1,59 +1,78 @@
 <section class="section second-section">
+    <script>
+        $(document).ready(function(){
+            $(".book-btn").click(function(){
+                var flightId = $(this).data('flight-id');
+                $.ajax({
+                    url: "{% url 'bookflight' %}",
+                    data: {
+                        'flight_id': flightId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    type: 'post',
+                    success: function(response){
+                        alert(response.message);
+                    }
+                });
+            });
+        });
+    </script>
+
     <div class="container">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    <div class="section_title text-center mb_70">
-                        <h2>Today's Flight Information</h2>
-                    </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="section_title text-center">
+                    <h2>Today's Flight Information</h2>
                 </div>
             </div>
-            <div class="row">
-                <section class="flight-chart">
-                    <header class="flight-chart-header">
-                        <ul class="nav nav-tabs" role="tablist" id="myTab" data-tabs id="flight-info-filters">
-                            <li id="arrivals-item" class="nav-item">
-                                <a href="#arrivals-content" id="arrivals-tab" class="nav-link active" role="tab" data-toggle="tab" aria-controls="arrivals-content" aria-selected="true">Arrivals</a>
-                            </li>
-                            <li id="departures-item" class="nav-item">
-                                <a href="#departures-content" id="departures-tab" class="nav-link" role="tab" data-toggle="tab" aria-controls="departures-content" aria-selected="false">Departures</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane show active" id="arrivals-content" role="tabpanel" aria-labelledby="arrivals-tab">
-                                <ul>
-                                    <li class="custom-control custom-radio custom-control-inline">
-                                        <input id="domestic-arrivals" name="arrivals" type="radio" value="Domestic" checked class="custom-control-input"/>
-                                        <label for="domestic-arrivals" class="custom-control-label">Domestic arrivals</label>
-                                    </li>
-                                    <li class="custom-control custom-radio custom-control-inline">
-                                        <input id="international-arrivals" name="arrivals" type="radio" value="International" class="custom-control-input"/>
-                                        <label for="international-arrivals" class="custom-control-label">International arrivals</label>
-                                    </li>
-                                </ul>
-                                <div class="form-group flight-chart-search">
-                                    <span class="fa fa-search form-control-feedback"></span>
-                                    <input type="text" class="form-control" placeholder="Flight #, Airline or Location">
-                                </div>
-                            </div>
-                            <div class="tab-pane" id="departures-content" role="tabpanel" aria-labelledby="departures-tab">
-                                <ul>
-                                    <li class="custom-control custom-radio custom-control-inline">
-                                        <input id="domestic-departures" name="departures" type="radio" value="Domestic" checked class="custom-control-input"/>
-                                        <label for="domestic-departures" class="custom-control-label">Domestic departures</label>
-                                    </li>
-                                    <li class="custom-control custom-radio custom-control-inline">
-                                        <input id="international-departures" name="departures" type="radio" value="International" class="custom-control-input"/>
-                                        <label for="international-departures" class="custom-control-label">International departures</label>
-                                    </li>
-                                </ul>
-                                <div class="form-group flight-chart-search">
-                                    <span class="fa fa-search form-control-feedback"></span>
-                                    <input type="text" class="form-control" placeholder="Search">
-                                </div>
-                            </div>
+        </div>
+        <div class="row">
+            <section class="flight-chart">
+                <header class="flight-chart-header">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab" data-tabs id="flight-info-filters">
+                        <li id="arrivals-item" class="nav-item">
+                            <a href="#arrivals-content" id="arrivals-tab" class="nav-link active" role="tab" data-toggle="tab" aria-controls="arrivals-content" aria-selected="true">Arrivals</a>
+                        </li>
+                        <li id="departures-item" class="nav-item">
+                            <a href="#departures-content" id="departures-tab" class="nav-link" role="tab" data-toggle="tab" aria-controls="departures-content" aria-selected="false">Departures</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane show active" id="arrivals-content" role="tabpanel" aria-labelledby="arrivals-tab">
+                            <ul>
+                                <li class="custom-control custom-radio custom-control-inline">
+                                    <input id="domestic-arrivals" name="arrivals" type="radio" value="Domestic" checked class="custom-control-input"/>
+                                    <label for="domestic-arrivals" class="custom-control-label">Domestic arrivals</label>
+                                </li>
+                                <li class="custom-control custom-radio custom-control-inline">
+                                    <input id="international-arrivals" name="arrivals" type="radio" value="International" class="custom-control-input"/>
+                                    <label for="international-arrivals" class="custom-control-label">International arrivals</label>
+                                </li>
+                            </ul>
+                            <!-- <div class="form-group flight-chart-search">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <input type="text" class="form-control" placeholder="Flight #, Airline or Location">
+                            </div> -->
                         </div>
-                    </header>
+                        <div class="tab-pane" id="departures-content" role="tabpanel" aria-labelledby="departures-tab">
+                            <ul>
+                                <li class="custom-control custom-radio custom-control-inline">
+                                    <input id="domestic-departures" name="departures" type="radio" value="Domestic" checked class="custom-control-input"/>
+                                    <label for="domestic-departures" class="custom-control-label">Domestic departures</label>
+                                </li>
+                                <li class="custom-control custom-radio custom-control-inline">
+                                    <input id="international-departures" name="departures" type="radio" value="International" class="custom-control-input"/>
+                                    <label for="international-departures" class="custom-control-label">International departures</label>
+                                </li>
+                            </ul>
+                            <!-- <div class="form-group flight-chart-search">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <input type="text" class="form-control" placeholder="Flight #, Airline or Location">
+                            </div> -->
+                        </div>
+                    </div>
+                </header>
+                {% if flight_data_len > 0 %}
                     <table class="table table-hover table-center flight-chart-table">
                         <thead>
                             <tr>
@@ -62,30 +81,45 @@
                                 <th scope="col">Arriving From</th>
                                 <th scope="col">Depart Time</th>
                                 <th scope="col">Arrival Time</th>
-                                <th scope="col">Booking</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for row in flight_data %}
                                 <tr>
-                                    <td class="col--airline">{{ row.airline }}</td>
-                                    <td class="col--flight-no">{{ row.plane }}</td>
-                                    <td class="col--arriving-from">{{ row.origin_id }}</td>
-                                    <td class="col--scheduled">{{ row.depart_time }}</td>
-                                    <td class="col--est-act">{{ row.arrival_time }}</td>
-                                    <td>book</td>
+                                    <td class="align-middle">{{ row.airline }}</td>
+                                    <td class="align-middle">{{ row.plane }}</td>
+                                    <td class="align-middle">{{ row.origin }}</td>
+                                    <td class="align-middle">{{ row.depart_time }}</td>
+                                    <td class="align-middle">{{ row.arrival_time }}</td>
+                                    <td><button class="btn btn-link book-btn" data-flight-id="{{ row.id }}">Book Now</button></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    <footer class="flight-chart-footer">
-                        <a href="/travellers/flights/arrivals-and-departures/" class="btn" >View all flight information</a>
-                        <span>Last updated <span class="last-updated"> - - : - -</span>.
-                            <a href="/terms-and-conditions/"  target=_blank >Disclaimer</a>
-                        </span>
-                    </footer>
-                </section>
-            </div>
+                {% else %}
+                    <div class="py-2" style="text-align: center; margin: auto;">
+                        <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-exclamation-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                        </svg>
+                        <br><br>
+                        <h3>Sorry, No Flight available today</h3>
+                        <p>
+                            There are no flights shceduled for today. Please check back later.
+                        </p>
+                    </div>
+                {% endif %}
+
+                <footer class="flight-chart-footer">
+                    {% if not no_all_flights %}
+                        <a href="{% url 'flightchart' %}" class="btn" >View all flight information</a>
+                    {% endif %}
+                    <span>Last updated <span class="last-updated"> - - : - -</span>.
+                        <a href="/terms-and-conditions/"  target=_blank >Disclaimer</a>
+                    </span>
+                </footer>
+            </section>
         </div>
     </div>
 </section>

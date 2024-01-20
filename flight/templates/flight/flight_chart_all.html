@@ -1,0 +1,12 @@
+{% extends 'flight/layout.html' %}
+
+{% load static %}
+
+{% block head %}
+    <title>Today's Flights</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/flight_chart.css' %}">
+{% endblock head %}
+
+{% block body %}
+{% include 'flight/flight_chart.html' %}
+{% endblock %}

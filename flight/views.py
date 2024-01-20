@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from datetime import datetime
 import math
@@ -34,8 +35,8 @@ except:
 def index(request):
     min_date = f"{datetime.now().date().year}-{datetime.now().date().month}-{datetime.now().date().day}"
     max_date = f"{datetime.now().date().year if (datetime.now().date().month+3)<=12 else datetime.now().date().year+1}-{(datetime.now().date().month + 3) if (datetime.now().date().month+3)<=12 else (datetime.now().date().month+3-12)}-{datetime.now().date().day}"
-    flight_data = list(Flight.objects.all().values('airline','plane','origin_id','depart_time','arrival_time')[:10])
-    print(flight_data)
+    flight_data = Flight.objects.all()[:10]
+    flight_data_len = len(flight_data)
     if request.method == 'POST':
         origin = request.POST.get('Origin')
         destination = request.POST.get('Destination')
@@ -49,7 +50,8 @@ def index(request):
             'depart_date': depart_date,
             'seat': seat.lower(),
             'trip_type': trip_type,
-            'flight_data': flight_data
+            'flight_data': flight_data,
+            'flight_data_len': flight_data_len,
         })
         elif(trip_type == '2'):
             return_date = request.POST.get('ReturnDate')
@@ -62,13 +64,15 @@ def index(request):
             'seat': seat.lower(),
             'trip_type': trip_type,
             'return_date': return_date,
-            'flight_data': flight_data
+            'flight_data': flight_data,
+            'flight_data_len': flight_data_len,
         })
     else:
         return render(request, 'flight/index.html', {
             'min_date': min_date,
             'max_date': max_date,
-            'flight_data': flight_data
+            'flight_data': flight_data,
+            'flight_data_len': flight_data_len,
         })
 
 def login_view(request):
@@ -236,6 +240,22 @@ def flight(request):
             'max_price': math.ceil(max_price/100)*100,
             'min_price': math.floor(min_price/100)*100
         })
+
+def flight_chart(request):
+    flight_data = Flight.objects.all()[:50]
+    flight_data_len = len(flight_data)
+    return render(request, 'flight/flight_chart_all.html', {
+        'flight_data': flight_data,
+        'flight_data_len': flight_data_len,
+        'no_all_flights': True,
+    })
+
+@login_required
+def confirm_booking(request):
+    flight_id = request.POST.get('flight_id')
+    # ... booking logic here ...
+    return JsonResponse({'message': 'Booking confirmed!'})
+
 
 def review(request):
     flight_1 = request.GET.get('flight1Id')

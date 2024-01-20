@@ -1,6 +1,7 @@
 :root {
     --primary-color: #344b54;
     --white: #fff;
+    --header-color: var(--primary-color);
 }
 
 body{
@@ -20,7 +21,7 @@ body{
 }
 .navbar{
     padding: .7rem 1.2rem;
-    background-color: var(--primary-color) !important;
+    background-color: var(--header-color) !important;
     transition-duration: .2s;
 }
 .navbar .nav-link {
@@ -30,7 +31,7 @@ body{
     color: #fff !important;
 }
 .nav-link:hover{
-    color: #e12323!important;
+    color: var(--white) !important;
     transition-duration: .2s;
 }
 .my-account .dropdown-header{
@@ -181,8 +182,7 @@ body{
     left: auto;
 }
 
-
-.third-section .section_title{
+.second-section .section_title, .third-section .section_title{
     margin-top: 25px;
     margin-bottom: 45px;
 }
