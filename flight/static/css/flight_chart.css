@@ -80,6 +80,10 @@ header.flight-chart-header a::before {
     color: #aaa;
 }
 
+#flight-type-selector li label {
+    cursor: pointer;
+}
+
 .flight-chart-table {
     margin: 0 !important;
 }

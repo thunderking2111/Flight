@@ -26,14 +26,20 @@ class Week(models.Model):
     def __str__(self):
         return f"{self.name} ({self.number})"
 
+FLIGHT_TYPE = {
+    ('domestic', 'Domestic'),
+    ('international', 'International')
+}
 
 class Flight(models.Model):
+    type = models.CharField(max_length=16, choices=FLIGHT_TYPE)
     origin = models.ForeignKey(Place, on_delete=models.CASCADE, related_name="departures")
     destination = models.ForeignKey(Place, on_delete=models.CASCADE, related_name="arrivals")
     depart_time = models.TimeField(auto_now=False, auto_now_add=False)
-    depart_day = models.ManyToManyField(Week, related_name="flights_of_the_day")
+    depart_day = models.ManyToManyField(Week, related_name="departure_flights_of_the_day")
     duration = models.DurationField(null=True)
     arrival_time = models.TimeField(auto_now=False, auto_now_add=False)
+    arrival_day = models.ManyToManyField(Week, related_name="arrival_flights_of_the_day")
     plane = models.CharField(max_length=24)
     airline = models.CharField(max_length=64)
     economy_fare = models.FloatField(null=True)
@@ -43,6 +49,16 @@ class Flight(models.Model):
     def __str__(self):
         return f"{self.id}: {self.origin} to {self.destination}"
 
+    def save(self, *args, **kwargs):
+        self.type = 'domestic' if self.origin.country == self.destination.country else 'international'
+        self.arrival_day.set([self.calculate_arrival_day()])
+        super().save(*args, **kwargs)
+
+    def calculate_arrival_day(self):
+        depart_datetime = datetime.combine(datetime.today(), self.depart_time)
+        arrival_datetime = depart_datetime + self.duration
+        arrival_day_of_week = arrival_datetime.weekday()
+        return Week.objects.get(number=arrival_day_of_week)
 
 
 GENDER = (

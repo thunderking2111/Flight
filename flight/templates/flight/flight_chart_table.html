@@ -1,0 +1,38 @@
+{% if flight_data.count > 0 %}
+    <table class="table table-hover table-center">
+        <thead>
+            <tr>
+                <th scope="col">Airline</th>
+                <th scope="col">Flight No.</th>
+                <th scope="col">{% if flight_data.direction == 'arrival' %}Arriving From{% else %}Depart For{% endif %}</th>
+                <th scope="col">Depart Time</th>
+                <th scope="col">Arrival Time</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in flight_data.flights %}
+                <tr>
+                    <td class="align-middle">{{ row.airline }}</td>
+                    <td class="align-middle">{{ row.plane }}</td>
+                    <td class="align-middle">{% if flight_data.direction == 'arrival' %}{{ row.origin }}{% else %}{{ row.destination }}{% endif %}</td>
+                    <td class="align-middle">{{ row.depart_time }}</td>
+                    <td class="align-middle">{{ row.arrival_time }}</td>
+                    <td><button class="btn btn-link book-btn" data-flight-id="{{ row.id }}">Book Now</button></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="py-2" style="text-align: center; margin: auto;">
+        <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-exclamation-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+        </svg>
+        <br><br>
+        <h3>Sorry, No Flight available today</h3>
+        <p>
+            There are no flights shceduled for today. Please check back later.
+        </p>
+    </div>
+{% endif %}

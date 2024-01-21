@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 
 from datetime import datetime
 import math
@@ -30,13 +31,33 @@ try:
 except:
     pass
 
+# Utility function
+
+def get_flights_data(request, limit=None):
+    direction = request.GET.get('direction', 'arrival')
+    flight_type = request.GET.get('type', 'domestic')
+    limit = limit or int(request.GET.get('limit', 10))
+    week_day = Week.objects.get(number=datetime.now().weekday())
+    if direction == 'arrival':
+        flights = Flight.objects.filter(type=flight_type, arrival_day__in=[week_day])[:limit]
+    else:
+        flights = Flight.objects.filter(type=flight_type, depart_day__in=[week_day])[:limit]
+    return {
+        'flights': flights,
+        'count': len(flights),
+        'direction': direction,
+        'type': flight_type,
+        'limit': limit,
+    }
+
 # Create your views here.
 
 def index(request):
     min_date = f"{datetime.now().date().year}-{datetime.now().date().month}-{datetime.now().date().day}"
     max_date = f"{datetime.now().date().year if (datetime.now().date().month+3)<=12 else datetime.now().date().year+1}-{(datetime.now().date().month + 3) if (datetime.now().date().month+3)<=12 else (datetime.now().date().month+3-12)}-{datetime.now().date().day}"
-    flight_data = Flight.objects.all()[:10]
-    flight_data_len = len(flight_data)
+
+    flight_data = get_flights_data(request, 10)
+
     if request.method == 'POST':
         origin = request.POST.get('Origin')
         destination = request.POST.get('Destination')
@@ -51,7 +72,7 @@ def index(request):
             'seat': seat.lower(),
             'trip_type': trip_type,
             'flight_data': flight_data,
-            'flight_data_len': flight_data_len,
+            'flight_data_limit': 10,
         })
         elif(trip_type == '2'):
             return_date = request.POST.get('ReturnDate')
@@ -65,14 +86,12 @@ def index(request):
             'trip_type': trip_type,
             'return_date': return_date,
             'flight_data': flight_data,
-            'flight_data_len': flight_data_len,
         })
     else:
         return render(request, 'flight/index.html', {
             'min_date': min_date,
             'max_date': max_date,
             'flight_data': flight_data,
-            'flight_data_len': flight_data_len,
         })
 
 def login_view(request):
@@ -242,13 +261,15 @@ def flight(request):
         })
 
 def flight_chart(request):
-    flight_data = Flight.objects.all()[:50]
-    flight_data_len = len(flight_data)
     return render(request, 'flight/flight_chart_all.html', {
-        'flight_data': flight_data,
-        'flight_data_len': flight_data_len,
+        'flight_data': get_flights_data(request, 50),
         'no_all_flights': True,
     })
+
+def flight_chart_table(request):
+    return HttpResponse(render_to_string('flight/flight_chart_table.html', {
+        'flight_data': get_flights_data(request)
+    }))
 
 @login_required
 def confirm_booking(request):

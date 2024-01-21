@@ -15,6 +15,40 @@
                     }
                 });
             });
+
+            var direction = "{{ flight_data.direction }}";
+            var type = "{{ flight_data.type }}";
+            function showLoading() {
+                $('.flight-chart-table').html('<div class="py-2" style="text-align: center; margin: auto;"><svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-repeat" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 0 10A5 5 0 0 0 8 3zM1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8z"/><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8 5.707 6.354 7.354a.5.5 0 1 1-.708-.708l2-2z"/></svg><br><br><h3>Loading...</h3></div>');
+            }
+            function updateFlights() {
+                showLoading();
+                $.ajax({
+                    url: "{% url 'flightcharttable' %}",
+                    data: {
+                        'direction': direction,
+                        'type': type,
+                        'limit': "{{ flight_data.limit }}"
+                    },
+                    type: 'get',
+                    success: function(response){
+                        $('.flight-chart-table').html(response);
+                    }
+                });
+            }
+            $('#flight-info-filters a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                direction = e.target.id.includes('arrival') ? 'arrival' : 'depart';
+                var newHref = "{% url 'flightchart' %}?direction=" + direction + "&type=" + type;
+                $('#view-all-flights').attr('href', newHref);
+                updateFlights();
+            });
+            $('input[name="arrivals"], input[name="departures"]').on('change', function() {
+                const selector = direction === 'arrival' ? 'arrivals' : 'departures';
+                type = $(`input[name="${selector}"]:checked`).val();
+                var newHref = "{% url 'flightchart' %}?direction=" + direction + "&type=" + type;
+                $('#view-all-flights').attr('href', newHref);
+                updateFlights();
+            });
         });
     </script>
 
@@ -29,23 +63,23 @@
         <div class="row">
             <section class="flight-chart">
                 <header class="flight-chart-header">
-                    <ul class="nav nav-tabs" role="tablist" id="myTab" data-tabs id="flight-info-filters">
+                    <ul class="nav nav-tabs" role="tablist" id="flight-info-filters">
                         <li id="arrivals-item" class="nav-item">
-                            <a href="#arrivals-content" id="arrivals-tab" class="nav-link active" role="tab" data-toggle="tab" aria-controls="arrivals-content" aria-selected="true">Arrivals</a>
+                            <a href="#arrivals-content" id="arrivals-tab" class="nav-link {% if flight_data.direction == 'arrival' %}active{% endif %}" role="tab" data-toggle="tab" aria-controls="arrivals-content" aria-selected="true">Arrivals</a>
                         </li>
                         <li id="departures-item" class="nav-item">
-                            <a href="#departures-content" id="departures-tab" class="nav-link" role="tab" data-toggle="tab" aria-controls="departures-content" aria-selected="false">Departures</a>
+                            <a href="#departures-content" id="departures-tab" class="nav-link {% if flight_data.direction == 'depart' %}active{% endif %}" role="tab" data-toggle="tab" aria-controls="departures-content" aria-selected="false">Departures</a>
                         </li>
                     </ul>
-                    <div class="tab-content" id="myTabContent">
+                    <div class="tab-content" id="flight-type-selector">
                         <div class="tab-pane show active" id="arrivals-content" role="tabpanel" aria-labelledby="arrivals-tab">
                             <ul>
                                 <li class="custom-control custom-radio custom-control-inline">
-                                    <input id="domestic-arrivals" name="arrivals" type="radio" value="Domestic" checked class="custom-control-input"/>
+                                    <input id="domestic-arrivals" name="arrivals" type="radio" value="domestic" {% if flight_data.type == 'domestic' %}checked{% endif %} class="custom-control-input"/>
                                     <label for="domestic-arrivals" class="custom-control-label">Domestic arrivals</label>
                                 </li>
                                 <li class="custom-control custom-radio custom-control-inline">
-                                    <input id="international-arrivals" name="arrivals" type="radio" value="International" class="custom-control-input"/>
+                                    <input id="international-arrivals" name="arrivals" type="radio" value="international" c{% if flight_data.type == 'international' %}checked{% endif %} class="custom-control-input"/>
                                     <label for="international-arrivals" class="custom-control-label">International arrivals</label>
                                 </li>
                             </ul>
@@ -57,11 +91,11 @@
                         <div class="tab-pane" id="departures-content" role="tabpanel" aria-labelledby="departures-tab">
                             <ul>
                                 <li class="custom-control custom-radio custom-control-inline">
-                                    <input id="domestic-departures" name="departures" type="radio" value="Domestic" checked class="custom-control-input"/>
+                                    <input id="domestic-departures" name="departures" type="radio" value="domestic" {% if flight_data.type == 'domestic' %}checked{% endif %} class="custom-control-input"/>
                                     <label for="domestic-departures" class="custom-control-label">Domestic departures</label>
                                 </li>
                                 <li class="custom-control custom-radio custom-control-inline">
-                                    <input id="international-departures" name="departures" type="radio" value="International" class="custom-control-input"/>
+                                    <input id="international-departures" name="departures" type="radio" value="international" {% if flight_data.type == 'international' %}checked{% endif %} class="custom-control-input"/>
                                     <label for="international-departures" class="custom-control-label">International departures</label>
                                 </li>
                             </ul>
@@ -72,48 +106,14 @@
                         </div>
                     </div>
                 </header>
-                {% if flight_data_len > 0 %}
-                    <table class="table table-hover table-center flight-chart-table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Airline</th>
-                                <th scope="col">Flight No.</th>
-                                <th scope="col">Arriving From</th>
-                                <th scope="col">Depart Time</th>
-                                <th scope="col">Arrival Time</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in flight_data %}
-                                <tr>
-                                    <td class="align-middle">{{ row.airline }}</td>
-                                    <td class="align-middle">{{ row.plane }}</td>
-                                    <td class="align-middle">{{ row.origin }}</td>
-                                    <td class="align-middle">{{ row.depart_time }}</td>
-                                    <td class="align-middle">{{ row.arrival_time }}</td>
-                                    <td><button class="btn btn-link book-btn" data-flight-id="{{ row.id }}">Book Now</button></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <div class="py-2" style="text-align: center; margin: auto;">
-                        <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-exclamation-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
-                        </svg>
-                        <br><br>
-                        <h3>Sorry, No Flight available today</h3>
-                        <p>
-                            There are no flights shceduled for today. Please check back later.
-                        </p>
-                    </div>
-                {% endif %}
+
+                <div class="flight-chart-table">
+                    {% include 'flight/flight_chart_table.html' %}
+                </div>
 
                 <footer class="flight-chart-footer">
                     {% if not no_all_flights %}
-                        <a href="{% url 'flightchart' %}" class="btn" >View all flight information</a>
+                        <a id="view-all-flights" href="{% url 'flightchart' %}?direction={{ flight_data.direction }}&type={{ flight_data.type }}" class="btn" >View all flight information</a>
                     {% endif %}
                     <span>Last updated <span class="last-updated"> - - : - -</span>.
                         <a href="/terms-and-conditions/"  target=_blank >Disclaimer</a>

@@ -17,6 +17,7 @@ urlpatterns = [
     path('flight/ticket/cancel', views.cancel_ticket, name="cancelticket"),
     path('flight/ticket/resume', views.resume_booking, name="resumebooking"),
     path('flight/chart/', views.flight_chart, name="flightchart"),
+    path('flight/chart-table', views.flight_chart_table, name="flightcharttable"),
     path('flight/book', views.confirm_booking, name="bookflight"),
     path('contact', views.contact, name="contact"),
     path('privacy-policy', views.privacy_policy, name="privacypolicy"),
