@@ -44,10 +44,12 @@ def get_flights_data(request, limit=None):
         flights = Flight.objects.filter(type=flight_type, depart_day__in=[week_day])[:limit]
     return {
         'flights': flights,
+        'current_time': datetime.now().strftime("%I:%M %p"),
         'count': len(flights),
         'direction': direction,
         'type': flight_type,
         'limit': limit,
+        'week_day': week_day,
     }
 
 # Create your views here.
@@ -507,7 +509,7 @@ def resume_booking(request):
         return HttpResponse("Method must be post.")
 
 def contact(request):
-    return render(request, 'flight/contact.html')
+    return render(request, 'flight/contact.html', {'page': 'contact'})
 
 def privacy_policy(request):
     return render(request, 'flight/privacy-policy.html')
@@ -516,4 +518,4 @@ def terms_and_conditions(request):
     return render(request, 'flight/terms.html')
 
 def about_us(request):
-    return render(request, 'flight/about.html')
+    return render(request, 'flight/about.html', {'page': 'aboutus'})

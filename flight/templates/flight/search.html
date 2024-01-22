@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head %}
-    <title>Search | Flight</title>
+    <title>Search | Starcity Airport</title>
     <link rel="stylesheet" href="{% static 'css/search_style.css' %}">
     <link rel="stylesheet" href="{% static 'css/search2_style.css' %}">
     <!--<script src="{% static 'js/search.js' %}"></script>-->
@@ -109,7 +109,7 @@
                                 </svg>
                                 &nbsp;
                             {% endif %}
-                            
+
                         </div>
                         <div>{{destination.city}}</div>
                     </div>
@@ -118,7 +118,7 @@
                             {{depart_date | date:'D, d M'}}
                             {% if trip_type == '2' %}
                                 |
-                                {{return_date | date:'D, d M'}}     
+                                {{return_date | date:'D, d M'}}
                             {% endif %}
                             |
                             {{seat}}
@@ -146,14 +146,14 @@
                         <span>{{origin.code | upper}}</sapn>
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"></path>
-                            </svg>    
+                            </svg>
                         <span>{{destination.code | upper}}</span>
                     </div>
                     <div id="flight2-btn-div" data-trip_type="2" onclick="trip_type_flight(this)">
                         <span>{{destination.code | upper}}</sapn>
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"></path>
-                            </svg>    
+                            </svg>
                         <span>{{origin.code | upper}}</span>
                     </div>
                 </div>-->
@@ -390,7 +390,7 @@
                                             <div class="flight-details">
                                                 <div class="flight-price">
                                                     <h5>
-                                                        ₹ 
+                                                        ₹
                                                         <span>
                                                             {% if seat == 'Economy' %}{{flight.economy_fare}}{% endif %}
                                                             {% if seat == 'Business' %}{{flight.business_fare}}{% endif %}
@@ -410,14 +410,14 @@
                                                             <input type="hidden" name="flight1Date", value="{{depart_date|date:'d-m-Y'}}">
                                                             <input type="hidden" name="seatClass" value="{{seat}}">
                                                             <button class="btn btn-primary btn-danger o-b" type="submit">
-                                                            
+
                                                                 Book Flight <!--&#8594;-->
                                                             </button>
                                                         </form>
                                                     {% endif %}
 
 
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
@@ -676,7 +676,7 @@
                                                 <div class="flight-details">
                                                     <div class="flight-price">
                                                         <h5>
-                                                            ₹ 
+                                                            ₹
                                                             <span>
                                                                 {% if seat == 'Economy' %}{{flight2.economy_fare}}{% endif %}
                                                                 {% if seat == 'Business' %}{{flight2.business_fare}}{% endif %}
@@ -703,7 +703,7 @@
                                                         {% endif %}
 
 
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>

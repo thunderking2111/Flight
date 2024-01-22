@@ -16,7 +16,6 @@ header ul {
 header .tab-content {
     margin: 0;
     background-color: var(--primary-color) !important;
-    background-image: url(/static/img/pattern-teal.gif);
 }
 header.flight-chart-header a {
     align-items: center;
@@ -36,7 +35,6 @@ header.flight-chart-header a:hover {
 }
 header.flight-chart-header a.active {
     background-color: var(--primary-color) !important;
-    background-image: url(/static/img/pattern-teal.gif);
     color: var(--white) !important;
 }
 header.flight-chart-header a.active:hover {
@@ -58,7 +56,7 @@ header.flight-chart-header a::before {
 .tab-content .tab-pane ul {
     margin-bottom: 16px;
     font-size: 16px;
-    color: #fff;
+    color: var(--white);
 }
 .tab-content .tab-pane ul li {
     margin-right: 16px;

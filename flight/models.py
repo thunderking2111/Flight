@@ -1,11 +1,33 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 from datetime import datetime
 
 # Create your models here.
 
+class UserManager(BaseUserManager):
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        if not username:
+            raise ValueError('The given username must be set')
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        if 'first_name' not in extra_fields:
+            extra_fields.setdefault('first_name', input('First name: '))
+        if 'last_name' not in extra_fields:
+            extra_fields.setdefault('last_name', input('Last name: '))
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(username, email, password, **extra_fields)
+
 class User(AbstractUser):
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    objects = UserManager()
+
     def __str__(self):
         return f"{self.id}: {self.first_name} {self.last_name}"
 

@@ -15,10 +15,10 @@
         <div>
             <center>
                 <img src="{% static 'img/icon_logo.png' %}" height="35em" style="margin-bottom: 2vh;">
-                <h3>Sign up for Flight</h2><br>
+                <h3>Sign up for Starcity Airport</h2><br>
             </center>
         </div>
-    
+
         <form action="{% url 'register' %}" method="post" id="signin-form" style="width: 100%;margin-bottom: 5vh;"  enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
@@ -55,7 +55,7 @@
                 <input class="btn btn-danger" type="submit" value="Sign Up" style="margin-top: 10px; width: 95%;" disabled>
             </center>
         </form>
-    
+
         <div>
             <center>
                 Already have an account?&nbsp;&nbsp;<a href="{% url 'login' %}">Log in</a>

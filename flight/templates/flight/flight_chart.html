@@ -83,10 +83,6 @@
                                     <label for="international-arrivals" class="custom-control-label">International arrivals</label>
                                 </li>
                             </ul>
-                            <!-- <div class="form-group flight-chart-search">
-                                <span class="fa fa-search form-control-feedback"></span>
-                                <input type="text" class="form-control" placeholder="Flight #, Airline or Location">
-                            </div> -->
                         </div>
                         <div class="tab-pane" id="departures-content" role="tabpanel" aria-labelledby="departures-tab">
                             <ul>
@@ -99,10 +95,6 @@
                                     <label for="international-departures" class="custom-control-label">International departures</label>
                                 </li>
                             </ul>
-                            <!-- <div class="form-group flight-chart-search">
-                                <span class="fa fa-search form-control-feedback"></span>
-                                <input type="text" class="form-control" placeholder="Flight #, Airline or Location">
-                            </div> -->
                         </div>
                     </div>
                 </header>
@@ -115,8 +107,8 @@
                     {% if not no_all_flights %}
                         <a id="view-all-flights" href="{% url 'flightchart' %}?direction={{ flight_data.direction }}&type={{ flight_data.type }}" class="btn" >View all flight information</a>
                     {% endif %}
-                    <span>Last updated <span class="last-updated"> - - : - -</span>.
-                        <a href="/terms-and-conditions/"  target=_blank >Disclaimer</a>
+                    <span>Last updated <span class="last-updated">{{flight_data.current_time}}</span>.
+                        <a href="{% url 'termsandconditions' %}"  target=_blank >Disclaimer</a>
                     </span>
                 </footer>
             </section>
