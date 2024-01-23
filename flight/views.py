@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -108,17 +108,22 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
-
+            next_url = request.POST.get('next', '/')
+            return redirect(next_url)
         else:
+            next_url = request.POST.get('next', '/')
             return render(request, "flight/login.html", {
-                "message": "Invalid username and/or password."
+                "message": "Invalid username and/or password.",
+                "next": next_url
             })
     else:
+        next_url = request.GET.get('next', '/')
         if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('index'))
+            return redirect(next)
         else:
-            return render(request, "flight/login.html")
+            return render(request, "flight/login.html", {
+                "next": next_url
+            })
 
 def register_view(request):
     if request.method == "POST":
@@ -281,7 +286,10 @@ def flight_chart_table(request):
 @login_required
 def confirm_booking(request):
     flight_id = request.GET.get('flight_id')
-    flight = Flight.objects.get(id=int(flight_id))
+    try:
+        flight = Flight.objects.get(id=int(flight_id))
+    except Flight.DoesNotExist as e:
+        return JsonResponse({'message': 'Flight not found'})
     if flight:
         return render(request, "flight/book.html", {
             'flight1': flight,

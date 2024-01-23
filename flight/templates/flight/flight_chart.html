@@ -1,22 +1,19 @@
 <section class="section second-section">
     <script>
+        function bookBtnclick(btn) {
+            var flightId = btn.dataset.flightId;
+            $.ajax({
+                url: "{% url 'bookflight' %}",
+                data: {
+                    'flight_id': flightId
+                },
+                type: 'get',
+                success: function(response){
+                    alert(response.message);
+                }
+            });
+        }
         $(document).ready(function(){
-            function bookBtnclick(ev) {
-                debugger
-                var flightId = $(this).data('flight-id');
-                $.ajax({
-                    url: "{% url 'bookflight' %}",
-                    data: {
-                        'flight_id': flightId,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    type: 'post',
-                    success: function(response){
-                        alert(response.message);
-                    }
-                });
-            }
-
             var direction = "{{ flight_data.direction }}";
             var type = "{{ flight_data.type }}";
             function showLoading() {

@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     'flight-web-app.herokuapp.com',
 ]
 
+LOGIN_URL = '/login/'
 
 # Application definition
 
