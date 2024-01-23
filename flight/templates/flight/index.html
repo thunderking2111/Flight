@@ -6,6 +6,10 @@
     <title>Home | Starcity Airport</title>
     <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/flight_chart.css' %}">
+    {% if user.is_authenticated %}
+        <script type="text/javascript" src="{% static 'js/bookings.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/bookings_style.css' %}">
+    {% endif %}
 {% endblock head %}
 
 {% block body %}
@@ -97,4 +101,23 @@
         </div>
     </section>
     {% endif %}
+
+    {% if user.is_authenticated %}
+        {% include 'flight/bookings.html' %}
+    {% endif %}
+
+    {% block parentBody %}
+        {% if user.is_authenticated %}
+            <div class="popup">
+                <div class="small-popup">
+                    <div style="margin-bottom: 10px; font-size: 1.1em;"><strong>Do you really want to cancel this ticket?</strong></div>
+                    <div class="popup-actions">
+                        <button class="btn btn-light" onclick="remove_popup()">Go Back</button>
+                        <button class="btn btn-danger" id="cancel_ticket_btn" data-ref="" onclick="cancel_tkt()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %}
+
 {% endblock%}

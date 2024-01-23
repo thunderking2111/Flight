@@ -1,0 +1,25 @@
+{% extends 'flight/layout.html' %}
+
+{% load static %}
+
+{% block head %}
+    <title>Bookings | Starcity Airport</title>
+    <script type="text/javascript" src="{% static 'js/bookings.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/bookings_style.css' %}">
+{% endblock head %}
+
+{% block body %}
+    {% include 'flight/bookings.html' %}
+{% endblock %}
+
+{% block parentBody %}
+    <div class="popup">
+        <div class="small-popup">
+            <div style="margin-bottom: 10px; font-size: 1.1em;"><strong>Do you really want to cancel this ticket?</strong></div>
+            <div class="popup-actions">
+                <button class="btn btn-light" onclick="remove_popup()">Go Back</button>
+                <button class="btn btn-danger" id="cancel_ticket_btn" data-ref="" onclick="cancel_tkt()">Cancel</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

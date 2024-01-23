@@ -31,7 +31,6 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto flight-navbar-links">
-          <h3 class="banner-subtext">Hi There, {{user.first_name}} {{user.last_name}}</h3>
           {% if not user.is_authenticated %}
           <li class="nav-item {% if not page %}active{% endif %}">
             <a class="nav-link" href="{% url 'index' %}">Home</a>
@@ -45,6 +44,8 @@
           <li class="nav-item {% if page == 'aboutus' %}active{% endif %}">
             <a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
           </li>
+          {% else %}
+            <h3 class="banner-subtext">Hi There, {{user.first_name}} {{user.last_name}}</h3>
           {% endif %}
         </ul>
         <ul class="navbar-nav">

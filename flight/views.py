@@ -42,6 +42,10 @@ def get_flights_data(request, limit=None):
         flights = Flight.objects.filter(type=flight_type, arrival_day__in=[week_day])[:limit]
     else:
         flights = Flight.objects.filter(type=flight_type, depart_day__in=[week_day])[:limit]
+    if request.user and request.user.is_authenticated:
+        tickets_data = Ticket.objects.filter(user=request.user).order_by('-booking_date')
+    else:
+        tickets_data = []
     return {
         'flights': flights,
         'current_time': datetime.now().strftime("%I:%M %p"),
@@ -50,6 +54,7 @@ def get_flights_data(request, limit=None):
         'type': flight_type,
         'limit': limit,
         'week_day': week_day,
+        'tickets': tickets_data,
     }
 
 # Create your views here.
@@ -275,9 +280,15 @@ def flight_chart_table(request):
 
 @login_required
 def confirm_booking(request):
-    flight_id = request.POST.get('flight_id')
-    # ... booking logic here ...
-    return JsonResponse({'message': 'Booking confirmed!'})
+    flight_id = request.GET.get('flight_id')
+    flight = Flight.objects.get(id=int(flight_id))
+    if flight:
+        return render(request, "flight/book.html", {
+            'flight1': flight,
+            'fee': FEE
+        })
+    else:
+        return JsonResponse({'message': 'Flight not found!'})
 
 
 def review(request):
@@ -458,7 +469,7 @@ def get_ticket(request):
 def bookings(request):
     if request.user.is_authenticated:
         tickets = Ticket.objects.filter(user=request.user).order_by('-booking_date')
-        return render(request, 'flight/bookings.html', {
+        return render(request, 'flight/bookings_wrapper.html', {
             'page': 'bookings',
             'tickets': tickets
         })
