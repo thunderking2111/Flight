@@ -23,7 +23,7 @@
             <div class="row main-row">
                 <div class="col-8">
                 <div class="ticket-details">
-                    <h5>Ticket Details</h5>
+                    <h5>{{ flight1.origin.city }} to {{ flight1.destination.city }} <span class="custom-dot"></span> {{ seat }}</h5>
                     <hr>
                     <div class="media-airline">
                         <div>
@@ -339,7 +339,7 @@
                             </div>
                             <div class="col-6 ci">
                                 Email
-                                <input type="email" name="email" class="form-control" placeholder="Email" required>
+                                <input type="text" name="email_get" class="form-control" placeholder="Email" required oninput="validateEmail(event)">
                             </div>
                         </div>
                     </div>
@@ -392,12 +392,17 @@
                         <button type="button" class="btn btn-primary btn-light" style="margin-right: auto;" onclick="add_traveller()">Add</button>
                     </div>
                     <hr>
-                    <div class="add-traveller">
-                        <button class="add-traveller-btn text-uppercase btn"  type="button" data-toggle="collapse" data-target="#collapseExample">+ ADD ADULT</button>
+                    <div class="row pt-2 px-4">
+                        <div class="add-traveller">
+                            <button class="btn btn-light btn-sm text-uppercase" type="button" data-toggle="collapse" data-target="#collapseExample">+ ADD ADULT</button>
+                        </div>
+                        <div class="add-traveller">
+                            <button class="btn btn-light btn-sm text-uppercase" type="button" data-toggle="collapse" data-target="#collapseExample">+ ADD Child</button>
+                        </div>
                     </div>
                 </div>
                 <div class="payment-btn" style="background-color: transparent;">
-                    <button type="submit" class="btn btn-primary btn-danger">Proceed to payment</button>
+                    <button type="submit" class="btn btn-primary btn-primary flight-btn-primary">Proceed to payment</button>
                 </div>
                 </div>
                 <div class="col-4">
@@ -483,7 +488,7 @@
                             </div>
                             <div class="col coupon-apply" style="padding: 10px 10px 10px 0px">
                                 <center>
-                                    <button type="button" class="btn btn-primary btn-danger">Apply</button>
+                                    <button type="button" class="btn btn-primary btn-primary flight-btn-primary">Apply</button>
                                 </center>
                             </div>
                         </div>
@@ -491,7 +496,7 @@
                 </div>
                 <div class="col media-payment-btn">
                     <div>
-                        <button type="submit" class="btn btn-primary btn-danger">Proceed to payment</button>
+                        <button type="submit" class="btn btn-primary btn-primary flight-btn-primary">Proceed to payment</button>
                     </div>
                 </div>
             </div>

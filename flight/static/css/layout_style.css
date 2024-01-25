@@ -36,6 +36,9 @@ body{
     color: var(--white) !important;
     transition-duration: .2s;
 }
+#mainNavbar .btn-outline-light:hover {
+    color: var(--primary-color);
+}
 .my-account .dropdown-header{
     align-content: flex-start;
 }
@@ -217,9 +220,11 @@ body{
 }
 
 footer{
-    background-color: rgba(var(--primary-color-vals), 0.4);
+    background-color: var(--primary-color);
+    color: var(--white);
     margin-top: 0px;
     padding-top: 1px;
+    border: 1px solid var(--primary-color);
 }
 footer .container > div{
     font-family: Barlow, sans-serif;
@@ -257,17 +262,17 @@ footer .container > div{
 }
 .footer-links{
     white-space: nowrap;
-    color: rgb(31, 31, 31);
+    color: inherit;
     text-decoration: underline solid var(--primary-color);
     transition: all 0.1s ease 0s;
 }
 .footer-links:hover{
-    color: rgba(var(--primary-color-vals), 0.6);
+    color: #a7d4fb;
 }
 .quote-container .quote{
     font-family: utopia-std, serif;
     text-align: center;
-    color: rgb(26, 26, 26);
+    color: var(--white);
     max-width: 500px;
     margin: auto;
     font-size: 21px;

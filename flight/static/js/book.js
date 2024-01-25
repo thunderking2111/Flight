@@ -88,17 +88,27 @@ function del_traveller(btn) {
         tvl.querySelector('.no-traveller').style.display = 'block';
     }
     traveller.remove();
-    
+
     let pcount = document.querySelector("#p-count").value;
     let fare = document.querySelector("#basefare").value;
     let fee = document.querySelector("#fee").value;
     if (parseInt(pcount) !== 0) {
         document.querySelector(".base-fare-value span").innerText = parseInt(fare)*parseInt(pcount);
-        document.querySelector(".total-fare-value span").innerText = (parseInt(fare)*parseInt(pcount))+parseInt(fee);   
+        document.querySelector(".total-fare-value span").innerText = (parseInt(fare)*parseInt(pcount))+parseInt(fee);
+    }
+}
+
+function validateEmail(event) {
+    var pattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    if (!pattern.test(event.target.value)) {
+        event.target.setCustomValidity('Invalid email address');
+    } else {
+        event.target.setCustomValidity('');
     }
 }
 
 function book_submit() {
+
     let pcount = document.querySelector("#p-count");
     if(parseInt(pcount.value) > 0) {
         return true;

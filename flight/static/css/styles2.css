@@ -20,7 +20,7 @@
     width: 95%;
 }
 .star{
-    color: var(--primary-color);
+    color: red;
 }
 
 .user-box{

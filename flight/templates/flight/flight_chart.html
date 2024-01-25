@@ -1,17 +1,8 @@
 <section class="section second-section">
     <script>
-        function bookBtnclick(btn) {
-            var flightId = btn.dataset.flightId;
-            $.ajax({
-                url: "{% url 'bookflight' %}",
-                data: {
-                    'flight_id': flightId
-                },
-                type: 'get',
-                success: function(response){
-                    alert(response.message);
-                }
-            });
+        function bookBtnClick(flightId) {
+            const seatClass = $('input[name="flight1Class"]:checked').val();
+            window.location.href = "{% url 'bookflight' %}?flight_id=" + flightId + "&seat_class=" + seatClass;
         }
         $(document).ready(function(){
             var direction = "{{ flight_data.direction }}";
@@ -69,7 +60,7 @@
                             <a href="#departures-content" id="departures-tab" class="nav-link {% if flight_data.direction == 'depart' %}active{% endif %}" role="tab" data-toggle="tab" aria-controls="departures-content" aria-selected="false">Departures</a>
                         </li>
                     </ul>
-                    <div class="tab-content" id="flight-type-selector">
+                    <div class="tab-content p-3" id="flight-type-selector">
                         <div class="tab-pane show active" id="arrivals-content" role="tabpanel" aria-labelledby="arrivals-tab">
                             <ul>
                                 <li class="custom-control custom-radio custom-control-inline">
@@ -91,6 +82,22 @@
                                 <li class="custom-control custom-radio custom-control-inline">
                                     <input id="international-departures" name="departures" type="radio" value="international" {% if flight_data.type == 'international' %}checked{% endif %} class="custom-control-input"/>
                                     <label for="international-departures" class="custom-control-label">International departures</label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane active seat-class-selector">
+                            <ul>
+                                <li class="custom-control custom-radio custom-control-inline">
+                                    <input id="economy-radio" name="flight1Class" type="radio" value="Economy" checked class="custom-control-input"/>
+                                    <label for="economy-radio" class="custom-control-label">Economy</label>
+                                </li>
+                                <li class="custom-control custom-radio custom-control-inline">
+                                    <input id="first-class-radio" name="flight1Class" type="radio" value="First" class="custom-control-input"/>
+                                    <label for="first-class-radio" class="custom-control-label">First Class</label>
+                                </li>
+                                <li class="custom-control custom-radio custom-control-inline">
+                                    <input id="business-class-radio" name="flight1Class" type="radio" value="Business" class="custom-control-input"/>
+                                    <label for="business-class-radio" class="custom-control-label">Business Class</label>
                                 </li>
                             </ul>
                         </div>

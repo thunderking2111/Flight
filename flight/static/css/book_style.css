@@ -35,6 +35,10 @@ h5{
     margin: 13px 10px;
 }
 
+.ticket-details .ticket-class li label {
+    cursor: pointer;
+}
+
 .time-details > div{
     text-align: center;
 }
@@ -97,9 +101,15 @@ h5{
     color: darkgreen;
     padding-top: 2px;
 }
+.flight-btn-primary {
+    background-color: var(--primary-color) !important;
+}
 .add-traveller{
-    /*margin: 13px;*/
-    padding-top: 13px;
+    margin-right: 1rem;
+}
+.add-traveller button {
+    color: blue;
+    font-size: .9em;
 }
 .add-traveller-btn{
     color: blue;
@@ -221,6 +231,15 @@ h5{
     margin-bottom: auto;
 }
 
+.custom-dot {
+    height: 7px;
+    width: 7px;
+    background-color: #9f9f9f;
+    border-radius: 50%;
+    margin: -2px 0.5rem 0 0.5rem;
+    display: inline-block;
+    transform: translateY(-2px);
+}
 
 
 @media (max-width: 376px) {
@@ -322,7 +341,7 @@ h5{
         padding-right: 5px;
     }
     .ticket-details-div .airport{
-        
+
     }
     .ticket-details-div .time-details{
         display: flex;

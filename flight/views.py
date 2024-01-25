@@ -293,7 +293,8 @@ def confirm_booking(request):
     if flight:
         return render(request, "flight/book.html", {
             'flight1': flight,
-            'fee': FEE
+            'fee': FEE,
+            'seat': request.GET.get('seat_class', 'Economy'),
         })
     else:
         return JsonResponse({'message': 'Flight not found!'})

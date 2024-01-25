@@ -83,3 +83,13 @@ document.addEventListener("DOMContentLoaded", () => {
     //    });
     //});
 });
+
+
+function validateEmail(event) {
+    var pattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    if (!pattern.test(event.target.value)) {
+        event.target.setCustomValidity('Invalid email address');
+    } else {
+        event.target.setCustomValidity('');
+    }
+}

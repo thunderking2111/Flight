@@ -51,7 +51,7 @@ header.flight-chart-header a::before {
 }
 
 .tab-content .tab-pane {
-    padding: 20px 26px 26px;
+    padding: 0 26px 0 26px;
 }
 .tab-content .tab-pane ul {
     margin-bottom: 16px;
@@ -91,7 +91,7 @@ header.flight-chart-header a::before {
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: #fff;
+    background-color: var(--primary-color);
     justify-content: space-between;
     padding: 20px 26px;
 }

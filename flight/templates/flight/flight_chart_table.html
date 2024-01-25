@@ -18,7 +18,7 @@
                     <td class="align-middle">{% if flight_data.direction == 'arrival' %}{{ row.origin }}{% else %}{{ row.destination }}{% endif %}</td>
                     <td class="align-middle">{{ flight_data.week_day.name|slice:3 }} {{ row.depart_time|date:"h:i A" }}</td>
                     <td class="align-middle">{{ flight_data.week_day.name|slice:3 }} {{ row.arrival_time|date:"h:i A" }}</td>
-                    <td><button class="btn btn-link book-btn" onclick="window.location.href = '/flight/book/?flight_id={{ row.id }}'" data-flight-id="{{ row.id }}">Book Now</button></td>
+                    <td><button class="btn btn-link book-btn" onclick="bookBtnClick('{{ row.id }}')" data-flight-id="{{ row.id }}">Book Now</button></td>
                 </tr>
             {% endfor %}
         </tbody>
