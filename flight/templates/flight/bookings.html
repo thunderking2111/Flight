@@ -8,8 +8,8 @@
                 </div>
             </div>
         </div>
-        {% if tickets %}
-            {% for ticket in tickets %}
+        {% if flight_data.tickets %}
+            {% for ticket in flight_data.tickets %}
                 <div class="row each-booking-div" id="{{ticket.ref_no}}">
                     <div class="col-2" style="display: flex;">
                         <div style="display: flex; color: #666666; margin-top: auto;">

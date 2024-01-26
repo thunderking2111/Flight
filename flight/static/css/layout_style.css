@@ -6,6 +6,11 @@
     --header-color: var(--primary-color);
 }
 
+
+.flight-btn-primary {
+    background-color: var(--primary-color) !important;
+}
+
 body{
     margin: 0px;
     padding: 0px;

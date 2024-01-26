@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 
-from datetime import datetime
+from datetime import datetime, time
 import math
 from .models import *
 from capstone.utils import render_to_pdf, createticket
@@ -351,7 +351,7 @@ def book(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
             flight_1 = request.POST.get('flight1')
-            flight_1date = request.POST.get('flight1Date')
+            flight_1date = request.POST.get('flight1Date') or datetime.combine(datetime.today(), time())
             flight_1class = request.POST.get('flight1Class')
             f2 = False
             if request.POST.get('flight2'):

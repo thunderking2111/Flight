@@ -101,9 +101,6 @@ h5{
     color: darkgreen;
     padding-top: 2px;
 }
-.flight-btn-primary {
-    background-color: var(--primary-color) !important;
-}
 .add-traveller{
     margin-right: 1rem;
 }

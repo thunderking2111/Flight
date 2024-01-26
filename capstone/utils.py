@@ -20,15 +20,17 @@ def render_to_pdf(template_src, context_dict={}):
 
 
 def createticket(user,passengers,passengerscount,flight1,flight_1date,flight_1class,coupon,countrycode,email,mobile):
-    ticket = Ticket.objects.create()
+    ticket = Ticket.objects.create(ref_no=secrets.token_hex(3).upper())
     ticket.user = user
-    ticket.ref_no = secrets.token_hex(3).upper()
     for passenger in passengers:
         ticket.passengers.add(passenger)
     ticket.flight = flight1
-    ticket.flight_ddate = datetime(int(flight_1date.split('-')[2]),int(flight_1date.split('-')[1]),int(flight_1date.split('-')[0]))
+    if not isinstance(flight_1date, datetime):
+        ticket.flight_ddate = datetime(int(flight_1date.split('-')[2]),int(flight_1date.split('-')[1]),int(flight_1date.split('-')[0]))
+        flight1ddate = datetime(int(flight_1date.split('-')[2]),int(flight_1date.split('-')[1]),int(flight_1date.split('-')[0]),flight1.depart_time.hour,flight1.depart_time.minute)
+    else:
+        flight1ddate = datetime.combine(flight_1date.date(), flight1.depart_time)
     ###################
-    flight1ddate = datetime(int(flight_1date.split('-')[2]),int(flight_1date.split('-')[1]),int(flight_1date.split('-')[0]),flight1.depart_time.hour,flight1.depart_time.minute)
     flight1adate = (flight1ddate + flight1.duration)
     ###################
     ticket.flight_adate = datetime(flight1adate.year,flight1adate.month,flight1adate.day)
