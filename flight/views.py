@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 import math
 from .models import *
 from capstone.utils import render_to_pdf, createticket
@@ -39,13 +39,17 @@ def get_flights_data(request, limit=None):
     limit = limit or int(request.GET.get('limit', 10))
     week_day = Week.objects.get(number=datetime.now().weekday())
     if direction == 'arrival':
-        flights = Flight.objects.filter(type=flight_type, arrival_day__in=[week_day])[:limit]
+        flights = Flight.objects.filter(type=flight_type, arrival_day__in=[week_day]).order_by('arrival_time')[:limit]
     else:
-        flights = Flight.objects.filter(type=flight_type, depart_day__in=[week_day])[:limit]
+        flights = Flight.objects.filter(type=flight_type, depart_day__in=[week_day]).order_by('depart_time')[:limit]
     if request.user and request.user.is_authenticated:
         tickets_data = Ticket.objects.filter(user=request.user).order_by('-booking_date')
+        flight_places = Place.objects.all().order_by('code')
+        flight_companies = sorted([fc['airline'] for fc in Flight.objects.values('airline').distinct()])
     else:
         tickets_data = []
+        flight_places = []
+        flight_companies = []
     return {
         'flights': flights,
         'current_time': datetime.now().strftime("%I:%M %p"),
@@ -55,6 +59,9 @@ def get_flights_data(request, limit=None):
         'limit': limit,
         'week_day': week_day,
         'tickets': tickets_data,
+        'flight_places': flight_places,
+        'flight_companies': flight_companies,
+        'week_days': Week.objects.all(),
     }
 
 # Create your views here.
@@ -131,27 +138,38 @@ def register_view(request):
         lname = request.POST['lastname']
         username = request.POST["username"]
         email = request.POST["email"]
+        user_type = request.POST["user_type"]
+        return_json = request.POST.get("return_json", False)
 
         # Ensuring password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "flight/register.html", {
-                "message": "Passwords must match."
-            })
+            if (return_json):
+                return JsonResponse({'error': 'Passwords must match'})
+            else :
+                return render(request, "flight/register.html", {
+                    "message": "Passwords must match."
+                })
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(username, email, password, user_type)
             user.first_name = fname
             user.last_name = lname
             user.save()
         except:
-            return render(request, "flight/register.html", {
-                "message": "Username already taken."
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+            if return_json:
+                return JsonResponse({'error': 'Username already taken'})
+            else:
+                return render(request, "flight/register.html", {
+                    "message": "Username already taken."
+                })
+        if not return_json:
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return JsonResponse({'success': True})
     else:
         return render(request, "flight/register.html")
 
@@ -451,6 +469,43 @@ def payment(request):
             return HttpResponse("Method must be post.")
     else:
         return HttpResponseRedirect(reverse('login'))
+
+@login_required
+def add_flight(request):
+    if request.method == 'POST':
+        origin = Place.objects.get(code=request.POST['flightOrigin'].upper())
+        destination = Place.objects.get(code=request.POST['flightDestination'].upper())
+        depart_day = Week.objects.get(number=int(request.POST['flightDepartDay']))
+        depart_time = datetime.strptime(request.POST['flightDepartTime'], "%H:%M").time()
+        arrival_time = datetime.strptime(request.POST['flightArrivalTime'], "%H:%M").time()
+        duration = request.POST['flightDuration']
+        hours, minutes = map(int, duration.split(':'))
+        duration = timedelta(hours=hours, minutes=minutes)
+        company = request.POST['flightCompany']
+        flight_no = request.POST['flightNo']
+        economy_fare = float(request.POST['economyClassFare'])
+        first_class_fare = float(request.POST['firstClassFare'])
+        business_class_fare = float(request.POST['businessClassFare'])
+
+        try:
+            new_flight = Flight.objects.create(
+                origin=origin,
+                destination=destination,
+                depart_time=depart_time,
+                arrival_time=arrival_time,
+                duration=duration,
+                airline=company,
+                plane=flight_no,
+                economy_fare=economy_fare,
+                first_fare=first_class_fare,
+                business_fare=business_class_fare
+            )
+            new_flight.save()
+            new_flight.depart_day.set([depart_day])
+            new_flight.save()
+            return JsonResponse({'success': 'Flight Created Successfully'})
+        except Exception as e:
+            return JsonResponse({'error': 'Error creating flight'})
 
 
 def ticket_data(request, ref):

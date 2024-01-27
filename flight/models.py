@@ -6,11 +6,11 @@ from datetime import datetime
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email=None, password=None, **extra_fields):
+    def create_user(self, username, email=None, password=None, user_type=None, **extra_fields):
         if not username:
             raise ValueError('The given username must be set')
         email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
+        user = self.model(username=username, email=email, user_type=user_type, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -22,14 +22,22 @@ class UserManager(BaseUserManager):
             extra_fields.setdefault('last_name', input('Last name: '))
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        return self.create_user(username, email, password, **extra_fields)
+        user_type = 'ADM'
+        return self.create_user(username, email, password, user_type, **extra_fields)
 
 class User(AbstractUser):
+    USER_TYPE_CHOICES = (
+        ('EMP', 'Employee'),
+        ('NOR', 'Normal'),
+        ('ADM', 'Admin'),
+    )
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
     objects = UserManager()
 
+    user_type = models.CharField(max_length=3, choices=USER_TYPE_CHOICES, default='NOR')
+
     def __str__(self):
-        return f"{self.id}: {self.first_name} {self.last_name}"
+        return f"{self.id}: {self.first_name} {self.last_name} : {self.user_type}"
 
 class Place(models.Model):
     city = models.CharField(max_length=64)
@@ -72,8 +80,9 @@ class Flight(models.Model):
         return f"{self.id}: {self.origin} to {self.destination}"
 
     def save(self, *args, **kwargs):
-        self.type = 'domestic' if self.origin.country == self.destination.country else 'international'
-        self.arrival_day.set([self.calculate_arrival_day()])
+        if self.id:
+            self.type = 'domestic' if self.origin.country == self.destination.country else 'international'
+            self.arrival_day.set([self.calculate_arrival_day()])
         super().save(*args, **kwargs)
 
     def calculate_arrival_day(self):

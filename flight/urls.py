@@ -9,6 +9,7 @@ urlpatterns = [
     path("query/places/<str:q>", views.query, name="query"),
     path("flight/", views.flight, name="flight"),
     path("review/", views.review, name="review"),
+    path("flight/add/", views.add_flight, name="addflight"),
     path("flight/ticket/book/", views.book, name="book"),
     path("flight/ticket/payment/", views.payment, name="payment"),
     path('flight/ticket/api/<str:ref>', views.ticket_data, name="ticketdata"),

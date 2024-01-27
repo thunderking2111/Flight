@@ -17,7 +17,7 @@ header .tab-content {
     margin: 0;
     background-color: var(--primary-color) !important;
 }
-header.flight-chart-header a {
+header.flight-chart-header li a {
     align-items: center;
     color: var(--primary-color) !important;
     border: 0 !important;
@@ -29,18 +29,18 @@ header.flight-chart-header a {
     padding: 16px 22px;
     font-size: 22px;
 }
-header.flight-chart-header a:hover {
+header.flight-chart-header li a:hover {
     border: 0 !important;
     color: var(--primary-color) !important;
 }
-header.flight-chart-header a.active {
+header.flight-chart-header li a.active {
     background-color: var(--primary-color) !important;
     color: var(--white) !important;
 }
-header.flight-chart-header a.active:hover {
+header.flight-chart-header li a.active:hover {
     color: var(--white) !important;
 }
-header.flight-chart-header a::before {
+header.flight-chart-header li a::before {
     content: "";
     display: inline-block;
     height: 28px;

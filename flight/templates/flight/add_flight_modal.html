@@ -1,0 +1,134 @@
+<script>
+    $(document).ready(function(){
+        $("#addFlightForm").on('submit', function(e){
+            e.preventDefault();
+
+            var formData = $("#addFlightForm").serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'addflight' %}",
+                data: formData,
+                success: function(response){
+                    if (response.error) {
+                        alert("Error adding flight");
+                    } else {
+                        alert("Flight added successfully");
+                        $("#addFlightForm")[0].reset();
+                        $("#addFlightModal").modal('hide');
+                    }
+                },
+                error: function(error){
+                    alert("Error adding flight");
+                }
+            });
+
+        });
+    });
+</script>
+
+<div class="modal fade" id="addFlightModal" tabindex="-1" role="dialog" aria-labelledby="addFlightModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFlightModalLabel">Add Flight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="addFlightForm" method="post">
+                <div class="modal-body">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="flightDestination">Flight Destination</label>
+                                <select class="form-control" id="flightDestination" name="flightDestination" required>
+                                    {% for place in flight_data.flight_places %}
+                                        <option value="{{place.code}}">{{place.city}}, {{place.country}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col">
+                                <label for="flightOrigin">Flight Origin</label>
+                                <select class="form-control" id="flightOrigin" name="flightOrigin" required>
+                                    {% for place in flight_data.flight_places %}
+                                        <option value="{{place.code}}">{{place.city}}, {{place.country}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="flightDepartDay">Flight Depart Day</label>
+                                <select name="flightDepartDay" id="flightDepartDay" class="form-control" required>
+                                    {% for day in flight_data.week_days %}
+                                        <option value="{{day.number}}">{{day.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col">
+                                <label for="flightDepartTime">Flight Depart Time</label>
+                                <input type="time" class="form-control" id="flightDepartTime" name="flightDepartTime" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="flightArrivalTime">Flight Arrival Time</label>
+                                <input type="time" class="form-control" id="flightArrivalTime" name="flightArrivalTime" required>
+                            </div>
+                            <div class="form-group col">
+                                <label for="flightDuration">Flight Duration</label>
+                                <input type="time" class="form-control" id="flightDuration" name="flightDuration" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="flightCompany">Flight Company</label>
+                                <input list="flightCompanies" class="form-control" id="flightCompany" name="flightCompany" required>
+                                <datalist id="flightCompanies">
+                                    {% for company in flight_data.flight_companies %}
+                                        <option value="{{company}}">{{company}}</option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="form-group col">
+                                <label for="flightNo">Flight No</label>
+                                <input type="text" class="form-control" id="flightNo" name="flightNo" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="economyClassFare">Economy Class Fare</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">&#8377;</span>
+                                </div>
+                                <input type="number" class="form-control" id="economyClassFare" name="economyClassFare" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstClassFare">First Class Fare</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">&#8377;</span>
+                                </div>
+                                <input type="number" class="form-control" id="firstClassFare" name="firstClassFare" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessClassFare">Business Class Fare</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">&#8377;</span>
+                                </div>
+                                <input type="number" class="form-control" id="businessClassFare" name="businessClassFare" required>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="addFlightButton">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

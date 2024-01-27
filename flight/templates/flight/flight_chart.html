@@ -59,6 +59,14 @@
                         <li id="departures-item" class="nav-item">
                             <a href="#departures-content" id="departures-tab" class="nav-link {% if flight_data.direction == 'depart' %}active{% endif %}" role="tab" data-toggle="tab" aria-controls="departures-content" aria-selected="false">Departures</a>
                         </li>
+                        {% if user.user_type != 'NOR' %}
+                            <div class="flex-grow-1"></div>
+                            <div class="d-flex align-items-center mx-2">
+                                <button class="btn text-white flight-btn-primary add-flight" data-toggle="modal" data-target="#addFlightModal">
+                                    Add Flight
+                                </button>
+                            </div>
+                        {% endif %}
                     </ul>
                     <div class="tab-content p-3" id="flight-type-selector">
                         <div class="tab-pane show active" id="arrivals-content" role="tabpanel" aria-labelledby="arrivals-tab">
@@ -120,3 +128,5 @@
         </div>
     </div>
 </section>
+
+{% include 'flight/add_flight_modal.html' %}
