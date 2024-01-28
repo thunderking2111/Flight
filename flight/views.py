@@ -6,8 +6,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 
+from django_otp.plugins.otp_totp.models import TOTPDevice
+
+import os
+import base64
+import pyotp
 from datetime import datetime, time, timedelta
 import math
+
 from .models import *
 from capstone.utils import render_to_pdf, createticket
 
@@ -114,9 +120,13 @@ def login_view(request):
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
-            next_url = request.POST.get('next', '/')
-            return redirect(next_url)
+            devices = TOTPDevice.objects.filter(user=user, confirmed=True).first()
+            request.session['user_id'] = user.id
+            request.session['next_url'] = request.POST.get('next', '/')
+            if devices:
+                return redirect('totp_token_entry')
+            else:
+                return redirect('totp_device_setup')
         else:
             next_url = request.POST.get('next', '/')
             return render(request, "flight/login.html", {
@@ -594,3 +604,53 @@ def terms_and_conditions(request):
 
 def about_us(request):
     return render(request, 'flight/about.html', {'page': 'aboutus'})
+
+def totp_device_setup(request):
+    user = User.objects.get(id=request.session['user_id'])
+    device, created = TOTPDevice.objects.get_or_create(user=user, name='default')
+    if request.method == 'POST':
+        # User has scanned the QR code and entered their first token
+        token = request.POST['token']
+        if device.verify_token(token):
+            device.confirmed = True
+            device.save()
+            return redirect('totp_token_entry')
+        else:
+            # Invalid token
+            base32_key = base64.b32encode(device.key.encode()).decode()
+            totp = pyotp.TOTP(base32_key)
+            provisioning_uri = totp.provisioning_uri(name=user.username, issuer_name='Starcity Airport')
+            return render(request, 'flight/totp_device_setup.html', {
+                'provisioning_uri': provisioning_uri,
+                'error_message': 'Invalid token, Please try again.'
+            })
+    else:
+        key = os.urandom(20)
+        hex_key = key.hex()
+        device.key = hex_key
+        device.confirmed = False
+        device.save()
+
+        base32_key = base64.b32encode(key).decode()
+        totp = pyotp.TOTP(base32_key)
+        provisioning_uri = totp.provisioning_uri(name=user.username, issuer_name='Starcity Airport')
+        return render(request, 'flight/totp_device_setup.html', {'provisioning_uri': provisioning_uri})
+
+def totp_token_entry(request):
+    if request.method == 'POST':
+        # User has entered their token
+        token = request.POST['token']
+        user = User.objects.get(id=request.session['user_id'])
+        device = TOTPDevice.objects.get(user=user, name='default')
+
+        if device.verify_token(token):
+            login(request, user)
+            next_url = request.session.get('next_url', '/')
+            return redirect(next_url)
+        else:
+            return render(request, 'flight/totp_device_setup.html', {
+                'error_message': 'Invalid token, Please try again.'
+            })
+    else:
+        # Display token entry form
+        return render(request, 'flight/totp_device_setup.html')

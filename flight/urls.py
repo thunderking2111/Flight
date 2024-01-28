@@ -24,4 +24,6 @@ urlpatterns = [
     path('privacy-policy/', views.privacy_policy, name="privacypolicy"),
     path('terms-and-conditions/', views.terms_and_conditions, name="termsandconditions"),
     path('about-us/', views.about_us, name="aboutus"),
+    path('totp_token_entry/', views.totp_token_entry, name="totp_token_entry"),
+    path('totp_device_setup/', views.totp_device_setup, name="totp_device_setup"),
 ]

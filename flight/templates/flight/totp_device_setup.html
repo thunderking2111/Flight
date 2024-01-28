@@ -1,0 +1,82 @@
+{% extends "flight/layout2.html" %}
+
+{% load static %}
+
+{% block title %}
+    Sign In | Network
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-6 mx-auto">
+            <div class="jumbotron text-center">
+                <h1 class="display-4">Two-Factor Authentication Setup</h1>
+                {% if provisioning_uri %}
+                    <p class="lead">Scan the QR code with your authenticator app, then enter the token displayed in the app.</p>
+                    <hr class="my-4">
+                    <div id="qrcode" class="d-flex justify-content-center"></div>
+                    <script type="text/javascript">
+                        var qrcode = new QRCode(document.getElementById("qrcode"), {
+                            text: "{{ provisioning_uri }}",
+                            width: 200,
+                            height: 200
+                        });
+                    </script>
+                {% endif %}
+                <form id="tokenForm" action="{% if provisioning_uri %}{% url 'totp_device_setup' %}{% else %}{% url 'totp_token_entry' %}{% endif %}" method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="token">Enter the token displayed in your authenticator app:</label>
+                        <input type="text" id="token" name="token" class="form-control" autofocus required>
+                        <span id="tokenError" class="text-danger">{{ error_message }}</span>
+                    </div>
+                    <script>
+                        var input = document.getElementById('token');
+                        input.addEventListener('input', function (e) {
+                            var target = e.target, position = target.selectionEnd, length = target.value.length;
+                            target.setCustomValidity('');
+                            // Remember the old value
+                            var oldValue = target.value;
+
+                            // Remove non-digits and add space after 3 digits
+                            target.value = target.value.replace(/[^\d]/g, '').replace(/(.{3})/, '$1 ').trim();
+
+                            // If a space was added, adjust the cursor position
+                            if (target.value.length > oldValue.length) {
+                                position++;
+                            }
+
+                            // Limit input to 6 digits (including the space)
+                            if (target.value.length > 7) {
+                                target.value = target.value.slice(0, 7);
+                            }
+
+                            // Update the cursor position
+                            target.selectionEnd = position;
+                        });
+
+                        document.getElementById('tokenForm').addEventListener('submit', function (e) {
+                            const tempValue = input.value.replace(/\s/g, '');
+                            if (tempValue.length !== 6) {
+                                e.preventDefault();
+                                input.setCustomValidity('Please enter a 6 digit token.');
+                            } else {
+                                input.setCustomValidity('');
+                                input.value = tempValue;
+                            }
+                        });
+                    </script>
+                    <button type="submit" class="btn btn-primary">Verify</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
